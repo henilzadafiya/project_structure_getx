@@ -1,0 +1,17 @@
+{
+  "@@locale": "hi",
+  "login": "लॉग इन",
+  "forgotPassword": "पासवर्ड भूल गए?",
+  "register": "रजिस्टर",
+  "logInWithEmail": "ईमेल से लॉग इन करें",
+  "logInWithMobile": "मोबाइल से लॉग इन करें",
+  "enterEmailAddress": "ईमेल पता दर्ज करें",
+  "enterMobileNumber": "मोबाइल नंबर दर्ज करें",
+  "password": "पासवर्ड",
+  "passwordValidationMsg": "पासवर्ड में 6 - 16 वर्ण होने चाहिए: अंक, अक्षर या प्रतीक",
+  "readAndAgreeMsg": "मैंने पढ़ा और सहमति दी",
+  "appAgreement": "ऐप खाता उपयोगकर्ता अनुबंध",
+  "and": "और",
+  "privacyNotice": "गोपनीयता सूचना",
+  "signUp": "साइन अप"
+}

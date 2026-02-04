@@ -1,0 +1,175 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project_structure/utils/app_colors.dart';
+import 'package:project_structure/utils/assets.dart';
+import 'package:project_structure/widget/common_icon_view.dart';
+import 'package:project_structure/widget/common_text.dart';
+import 'package:project_structure/widget/error_text_widget.dart';
+
+class CustomTextField extends StatefulWidget {
+  final bool readOnly;
+  final TextEditingController controller;
+  final int maxLine;
+  final Function(String)? onChanged;
+  final TextInputType keyboardType;
+  final int? maxLength;
+  final double? radius;
+  final bool enabled;
+  final bool useMaxLine;
+  final bool isPassword;
+  final FocusNode? focusNode;
+  final String? hintText;
+  final TextAlign? textAlign;
+  final Widget? prefix;
+  final Widget? suffix;
+  final String? labelText;
+  final String? errorMessage;
+  final VoidCallback? onTap;
+  final Function(String?)? onSave;
+  final Color? enableColor;
+  final Color? focusedColor;
+  final Color? fillColor;
+  final Color? cursorColor;
+  final EdgeInsetsGeometry? contentPadding;
+  final Widget? prefixWidget;
+  final Widget? suffixWidget;
+
+  CustomTextField({
+    super.key,
+    this.onChanged,
+    this.maxLine = 1,
+    this.useMaxLine = true,
+    this.maxLength,
+    this.radius,
+    this.labelText = "",
+    this.isPassword = false,
+    this.enabled = true,
+    this.keyboardType = TextInputType.text,
+    this.focusNode,
+    this.hintText,
+    this.textAlign,
+    this.fillColor,
+    this.prefix,
+    this.suffix,
+    this.onTap,
+    this.enableColor,
+    this.focusedColor,
+    this.cursorColor,
+    required this.controller,
+    this.contentPadding,
+    this.prefixWidget,
+    this.suffixWidget,
+    this.errorMessage,
+    this.readOnly = false,
+    this.onSave,
+  });
+
+  @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  final ValueNotifier<bool> _isObscure = ValueNotifier(true);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        if (widget.labelText != null && (widget.labelText?.isNotEmpty ?? false))
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: CommonText(
+              string: widget.labelText ?? "",
+              fontWeight: FontWeight.w600,
+              fontSize: 15.sp,
+              color: AppColors.textPrimaryColor,
+            ),
+          ),
+        ValueListenableBuilder(
+            valueListenable: _isObscure,
+            builder: (context, bool isObscure, _) {
+              if (!widget.isPassword) {
+                isObscure = false;
+              }
+              return IntrinsicHeight(
+                child: TextFormField(
+                  onSaved: widget.onSave,
+                  readOnly: widget.readOnly,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13.sp,
+                    color: AppColors.textPrimaryColor,
+                    letterSpacing: 0.5,
+                  ),
+                  onTap: widget.onTap,
+                  obscureText: isObscure,
+                  obscuringCharacter: '*',
+                  onChanged: widget.onChanged,
+                  controller: widget.controller,
+                  maxLines: widget.useMaxLine ? widget.maxLine : null,
+                  maxLength: widget.maxLength,
+                  keyboardType: widget.keyboardType,
+                  focusNode: widget.focusNode,
+                  cursorColor: widget.cursorColor,
+                  textAlign: widget.textAlign ?? TextAlign.start,
+                  enabled: widget.enabled,
+                  decoration: InputDecoration(
+                      prefix: widget.prefixWidget,
+                      suffix: widget.suffixWidget,
+                      contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 13.w, vertical: 15.h),
+                      isDense: true,
+                      prefixIcon: widget.prefix,
+                      suffixIcon: widget.suffix == null && widget.isPassword
+                          ? GestureDetector(
+                        onTap: () {
+                          _isObscure.value = !isObscure;
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 14.h),
+                          child: SvgIconView(
+                            icon: !isObscure ? IconAsset.eyeShow : IconAsset.eyeHide,
+                          ),
+                        ),
+                      )
+                          : widget.suffix,
+                      counterText: "",
+                      // contentPadding: const EdgeInsets.all(12),
+                      hintText: widget.hintText,
+                      hintStyle: TextStyle(
+                        color: AppColors.textPrimaryColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                        letterSpacing: 0.5,
+                      ),
+                      error: (widget.errorMessage != null && (widget.errorMessage?.isNotEmpty ?? false)) ? ErrorTextWidget(errorMessage: widget.errorMessage) : null,
+                      filled: true,
+                      fillColor: widget.fillColor ?? AppColors.cardBgColor,
+                      disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(widget.radius ?? 50)),
+                        borderSide: BorderSide(color: AppColors.cardBgColor2),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(widget.radius ?? 50)),
+                        borderSide: BorderSide(color: widget.enableColor ?? AppColors.cardBgColor2),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(widget.radius ?? 50)),
+                        borderSide: BorderSide(color: widget.focusedColor ?? AppColors.cardBgColor2),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(widget.radius ?? 50)),
+                        borderSide: BorderSide(color: AppColors.textPrimaryColor),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(widget.radius ?? 50)),
+                        borderSide: BorderSide(color: AppColors.redColor),
+                      )),
+                ),
+              );
+            }),
+      ],
+    );
+  }
+}
