@@ -3,7 +3,13 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/src/extensions/widget_extensions.dart';
+import 'package:project_structure/utils/constants.dart';
 import 'package:project_structure/utils/enums.dart';
+import 'package:project_structure/widget/common_text_button.dart';
+import 'package:project_structure/widget/empty_widget.dart';
+import 'package:project_structure/widget/pagination_bottom_loading_widget.dart';
 
 class Utils {
   static void hideKeyboardInApp(BuildContext context) {
@@ -56,5 +62,79 @@ class Utils {
     } else {
       return ImagePathType.none;
     }
+  }
+
+  static Widget loadingAndDataView({
+    required bool isLoading,
+    Widget? loadingView,
+    required bool showEmptyView1,
+    Widget? emptyView,
+    required Widget dataView,
+    AlignmentGeometry alignment = Alignment.topCenter,
+    Duration? duration,
+    String? emptyViewTitle,
+    String? emptyViewSubTitle,
+    double? topPadding,
+    double? leftPadding,
+    double? rightPadding,
+    double? iconSize,
+    String? icon,
+    Color? emptyTitleColor,
+    bool? showBottomButton,
+    String? bottomButtonTitle,
+    String? bottomButtonIcon,
+    Function()? onTapBottomIcon,
+    MainAxisAlignment? emptyViewMainAxisAlignment,
+  }) {
+    return AnimatedSwitcher(
+      duration: duration ?? Constants.kAnimationDuration200,
+      transitionBuilder: (child, animation) {
+        return Align(
+          alignment: alignment,
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
+      child: isLoading
+          ? SizedBox(
+        key: const ValueKey("isLoading"),
+        child: loadingView ??
+            const PaginationBottomLoadingWidget(
+              showLoader: true,
+            ),
+      )
+          : showEmptyView1
+          ? SizedBox(
+        key: const ValueKey("showEmptyView"),
+        child: Column(
+          mainAxisAlignment: emptyViewMainAxisAlignment ?? MainAxisAlignment.center,
+          children: [
+            (emptyView ??
+                EmptyDataWidget(
+                  topPadding: topPadding,
+                  rightPadding: rightPadding,
+                  leftPadding: leftPadding,
+                  icon: icon,
+                  iconSize: iconSize,
+                  titleColor: emptyTitleColor,
+                  title: emptyViewTitle ?? 'No Data Found',
+                  subTitle: emptyViewSubTitle,
+                )),
+            if (showBottomButton ?? false)
+              CommonTextButton(
+                text: bottomButtonTitle ?? "",
+                leadingIcon: bottomButtonIcon ?? "",
+                onTap: onTapBottomIcon,
+              ).paddingOnly(top: 5.h),
+          ],
+        ),
+      )
+          : SizedBox(
+        key: const ValueKey("dataView"),
+        child: dataView,
+      ),
+    );
   }
 }

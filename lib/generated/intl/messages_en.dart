@@ -87,6 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "login": MessageLookupByLibrary.simpleMessage("Log in"),
     "mobileNumber": MessageLookupByLibrary.simpleMessage("Mobile Number"),
+    "noDataDesc": MessageLookupByLibrary.simpleMessage("No Data Desc"),
     "onBoardingDescription": MessageLookupByLibrary.simpleMessage(
       "on Boarding Description",
     ),
